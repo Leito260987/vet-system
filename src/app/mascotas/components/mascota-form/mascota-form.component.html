@@ -1,0 +1,80 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Registrar Mascota</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success" *ngIf="mensajeExito">{{ mensajeExito }}</div>
+          <form [formGroup]="form" (ngSubmit)="guardar()">
+            <h6 class="text-primary mb-3">Datos del Dueño</h6>
+            <div formGroupName="duenio" class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label">Nombre completo *</label>
+                <input appAutoFocus formControlName="nombre" class="form-control" [class.is-invalid]="campoInvalido('duenio','nombre')">
+                <div class="invalid-feedback">Mínimo 4 caracteres requeridos.</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">DNI *</label>
+                <input formControlName="dni" class="form-control" maxlength="8" [class.is-invalid]="campoInvalido('duenio','dni')">
+                <div class="invalid-feedback">DNI debe tener 8 dígitos.</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Teléfono *</label>
+                <input formControlName="telefono" class="form-control" [class.is-invalid]="campoInvalido('duenio','telefono')">
+                <div class="invalid-feedback">Teléfono peruano inválido (9 dígitos).</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Correo</label>
+                <input formControlName="correo" class="form-control" type="email" [class.is-invalid]="campoInvalido('duenio','correo')">
+                <div class="invalid-feedback">Correo inválido.</div>
+              </div>
+            </div>
+
+            <h6 class="text-primary mb-3">Datos de la Mascota</h6>
+            <div formGroupName="mascota" class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Nombre *</label>
+                <input formControlName="nombre" class="form-control" [class.is-invalid]="campoInvalido('mascota','nombre')">
+                <div class="invalid-feedback">Mínimo 2 caracteres.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Especie *</label>
+                <select formControlName="especie" class="form-select">
+                  <option *ngFor="let e of especies" [value]="e">{{ e }}</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Raza *</label>
+                <input formControlName="raza" class="form-control" [class.is-invalid]="campoInvalido('mascota','raza')">
+                <div class="invalid-feedback">La raza es requerida.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Fecha de nacimiento *</label>
+                <input formControlName="fechaNacimiento" type="date" class="form-control" [class.is-invalid]="campoInvalido('mascota','fechaNacimiento')">
+                <div class="invalid-feedback">
+                  <span *ngIf="mascotaGroup.get('fechaNacimiento')?.errors?.['required']">Campo requerido.</span>
+                  <span *ngIf="mascotaGroup.get('fechaNacimiento')?.errors?.['fechaFutura']">La fecha no puede ser futura.</span>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label">Observaciones</label>
+                <input formControlName="observaciones" class="form-control">
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="guardando">
+                <i class="bi bi-save"></i> {{ guardando ? 'Guardando...' : 'Guardar' }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary" routerLink="/mascotas">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

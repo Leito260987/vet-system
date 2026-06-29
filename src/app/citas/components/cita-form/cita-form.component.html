@@ -1,0 +1,66 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-calendar-plus"></i> Agendar Cita</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success" *ngIf="mensajeExito">{{ mensajeExito }}</div>
+          <form [formGroup]="form" (ngSubmit)="guardar()">
+            <div class="mb-3">
+              <label class="form-label">Mascota *</label>
+              <select formControlName="mascotaId" class="form-select" [class.is-invalid]="campoInvalido('mascotaId')"
+                (change)="onMascotaChange($event)">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let m of mascotas$ | async" [value]="m.id">{{ m.nombre }} ({{ m.duenio.nombre }})</option>
+              </select>
+              <div class="invalid-feedback">Selecciona una mascota.</div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Nombre mascota *</label>
+                <input formControlName="nombreMascota" class="form-control" [class.is-invalid]="campoInvalido('nombreMascota')">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Nombre dueño *</label>
+                <input formControlName="nombreDuenio" class="form-control" [class.is-invalid]="campoInvalido('nombreDuenio')">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Veterinario *</label>
+                <select formControlName="veterinario" class="form-select" [class.is-invalid]="campoInvalido('veterinario')">
+                  <option value="">Seleccionar...</option>
+                  <option *ngFor="let v of veterinarios" [value]="v">{{ v }}</option>
+                </select>
+                <div class="invalid-feedback">Selecciona un veterinario.</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Fecha *</label>
+                <input formControlName="fecha" type="date" class="form-control" [class.is-invalid]="campoInvalido('fecha')">
+                <div class="invalid-feedback">
+                  <span *ngIf="form.get('fecha')?.errors?.['required']">Requerido.</span>
+                  <span *ngIf="form.get('fecha')?.errors?.['fechaPasada']">No puede ser anterior a hoy.</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Hora *</label>
+                <input formControlName="hora" type="time" class="form-control" [class.is-invalid]="campoInvalido('hora')">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Motivo *</label>
+                <textarea formControlName="motivo" class="form-control" rows="3" [class.is-invalid]="campoInvalido('motivo')"></textarea>
+                <div class="invalid-feedback">Mínimo 5 caracteres.</div>
+              </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+              <button type="submit" class="btn btn-success" [disabled]="guardando">
+                <i class="bi bi-save"></i> {{ guardando ? 'Guardando...' : 'Agendar' }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary" routerLink="/citas">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

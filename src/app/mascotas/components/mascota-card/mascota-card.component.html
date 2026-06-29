@@ -1,0 +1,28 @@
+<div class="card h-100" [class.card-sm]="modoCompacto">
+  <div class="card-body">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <span class="fs-4">{{ getIcono() }}</span>
+      <div>
+        <h6 class="mb-0 fw-semibold">{{ mascota.nombre }}</h6>
+        <small class="text-muted">{{ mascota.raza }} · {{ mascota.fechaNacimiento | edadMascota }}</small>
+      </div>
+    </div>
+    <p class="text-muted small mb-1">
+      <i class="bi bi-person"></i> {{ mascota.duenio.nombre }}
+    </p>
+    <p class="text-muted small mb-2" *ngIf="mascota.observaciones">
+      <i class="bi bi-info-circle"></i> {{ mascota.observaciones }}
+    </p>
+    <div class="d-flex gap-1 flex-wrap" *ngIf="mostrarAcciones">
+      <button class="btn btn-sm btn-outline-primary" (click)="verHistorial()">
+        <i class="bi bi-clock-history"></i> Historial
+      </button>
+      <button class="btn btn-sm btn-outline-success" (click)="agendar()">
+        <i class="bi bi-calendar-plus"></i> Cita
+      </button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="editar()" *ngIf="!modoCompacto">
+        <i class="bi bi-pencil"></i>
+      </button>
+    </div>
+  </div>
+</div>

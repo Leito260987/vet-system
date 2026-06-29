@@ -1,0 +1,83 @@
+<div class="container py-4">
+  <h4 class="mb-4"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</h4>
+
+  <div class="row g-3 mb-4" *ngIf="stats$ | async as stats">
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.totalMascotas }}</div>
+        <div class="stat-label"><i class="bi bi-emoji-smile"></i> Total Mascotas</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.citasHoy }}</div>
+        <div class="stat-label"><i class="bi bi-calendar-day"></i> Citas Hoy</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-number text-warning">{{ stats.citasPendientes }}</div>
+        <div class="stat-label"><i class="bi bi-clock"></i> Citas Pendientes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <a routerLink="/mascotas" class="btn btn-outline-primary w-100 py-3">
+        <i class="bi bi-emoji-smile fs-4 d-block mb-1"></i> Gestionar Mascotas
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a routerLink="/citas" class="btn btn-outline-success w-100 py-3">
+        <i class="bi bi-calendar-check fs-4 d-block mb-1"></i> Gestionar Citas
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a routerLink="/historial" class="btn btn-outline-info w-100 py-3">
+        <i class="bi bi-clock-history fs-4 d-block mb-1"></i> Ver Historial
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a routerLink="/mascotas/nueva" class="btn btn-outline-secondary w-100 py-3">
+        <i class="bi bi-plus-circle fs-4 d-block mb-1"></i> Nueva Mascota
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <h5 class="mb-3">Próximas Citas</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead class="table-light">
+            <tr><th>Mascota</th><th>Fecha</th><th>Veterinario</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cita of citasRecientes$ | async" [appResaltarCitaProxima]="cita.fecha">
+              <td>{{ cita.nombreMascota }}</td>
+              <td>{{ cita.fecha | date:'dd/MM/yyyy' }} {{ cita.hora }}</td>
+              <td>{{ cita.veterinario }}</td>
+              <td><app-badge-estado [estado]="cita.estado"></app-badge-estado></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <h5 class="mb-3">Mascotas Registradas</h5>
+      <div class="row g-2">
+        <div class="col-12" *ngFor="let mascota of mascotasRecientes$ | async">
+          <app-mascota-card
+            [mascota]="mascota"
+            [modoCompacto]="true"
+            [mostrarAcciones]="true"
+            (onVerHistorial)="verHistorial($event)"
+            (onAgendar)="agendar($event)"
+            (onEditar)="editar($event)">
+          </app-mascota-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4><i class="bi bi-calendar-check text-primary"></i> Citas</h4>
+    <a routerLink="/citas/nueva" class="btn btn-primary">
+      <i class="bi bi-plus"></i> Nueva Cita
+    </a>
+  </div>
+
+  <div class="mb-3">
+    <select class="form-select w-auto" [(ngModel)]="filtroEstado" (change)="cargarCitas()">
+      <option value="">Todos los estados</option>
+      <option *ngFor="let e of estadosCita.slice(1)" [value]="e">{{ e }}</option>
+    </select>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Mascota</th>
+          <th>Dueño</th>
+          <th>Veterinario</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cita of citas$ | async" [appResaltarCitaProxima]="cita.fecha">
+          <td>{{ cita.nombreMascota }}</td>
+          <td>{{ cita.nombreDuenio }}</td>
+          <td>{{ cita.veterinario }}</td>
+          <td>{{ cita.fecha | date:'dd/MM/yyyy' }}</td>
+          <td>{{ cita.hora }}</td>
+          <td>{{ cita.motivo }}</td>
+          <td>
+            <app-badge-estado [estado]="cita.estado"></app-badge-estado>
+          </td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-success" (click)="confirmar(cita.id)"
+                *ngIf="cita.estado === EstadoCita.PENDIENTE">
+                <i class="bi bi-check"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary" (click)="completar(cita.id)"
+                *ngIf="cita.estado === EstadoCita.CONFIRMADA">
+                <i class="bi bi-check2-all"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="confirmarCancelacion(cita)"
+                *ngIf="cita.estado !== EstadoCita.CANCELADA && cita.estado !== EstadoCita.COMPLETADA"
+                data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal cancelación -->
+<div class="modal fade" id="modalCancelar" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar cancelación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="citaParaCancelar">
+        ¿Cancelar la cita de <strong>{{ citaParaCancelar.nombreMascota }}</strong>
+        para el {{ citaParaCancelar.fecha | date:'dd/MM/yyyy' }}?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button class="btn btn-danger" data-bs-dismiss="modal" (click)="cancelar()">Sí, cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
